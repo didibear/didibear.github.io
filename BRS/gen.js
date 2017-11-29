@@ -19,13 +19,8 @@ console.log(c);
 
 
 
-
 function not_good(){
-  var c = names.map(function(e, i) {
-    return [e, assos[i]];
-  });
-
-  return c.includes(["Camille", "Lucas"]) || c.includes(["Lucas", "Camille"]);
+  return false;
 }
 
 function shuffle(a) {
