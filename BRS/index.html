@@ -11,6 +11,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
   <script src="https://fr.vuejs.org/js/vue.min.js"></script>
 
+  <script src="gen.js"></script>
 </head>
 <body>
  
@@ -63,27 +64,35 @@
 </html>
 
 <script type="text/javascript">
-var names = ["Nikko", "Elodie", "Hugo", "Kevin", "Pierre", "Clemence", "Quentin", "Camille", "Joffrey", "Leonie", "Lucas", "Didi", "Mathieu", "Diane", "Manon"];
+const urlParams = new URLSearchParams(window.location.search);
+const event = urlParams.get('event');
 
-var app = new Vue({
-  el: '#app',
-  data: {
-    inputName: "",
-    result: null,
-    error: null
-  },
-  methods : {
-    getPerson : function () {
-      result = atob(this.inputName);
-      
-      if (names.includes(result)){
-        this.result = result;  
-        this.error = false;
-      } else {
-        this.error = true;
+var script = document.createElement('script');
+script.onload = function(){
+  var app = new Vue({
+    el: '#app',
+    data: {
+      inputName: "",
+      result: null,
+      error: null
+    },
+    methods : {
+      getPerson : function () {
+        result = atob(this.inputName);
+        
+        if (names.includes(result)){
+          this.result = result;  
+          this.error = false;
+        } else {
+          this.error = true;
+        }
+        console.log(result);
       }
-      console.log(result);
     }
-  }
-});
+  });
+}
+script.src = "conf/" + event + ".js";
+
+document.head.appendChild(script);
+
 </script>
