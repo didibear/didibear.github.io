@@ -1,5 +1,6 @@
 <!doctype html>
 <html>
+
 <head>
   <title>Nowel de la BRS</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
@@ -13,86 +14,104 @@
 
   <script src="gen.js"></script>
 </head>
+
 <body>
- 
-<div id="snowflakeContainer">
-  <p class="snowflake"><i class="fa fa-beer"></i></p>
-</div>
-
-<div id="snowflakeContainer">
-  <p class="snowflake">*</p>
-</div>
-<div id="content">
-  <div id="app" class="container ">
-    <div class="row">
-      <div class="col-12 text-center">
-        <h1><strong>Nowel de la BRS</strong></h1>
-      </div>
+  <div id="app">
+    <div id="snowflakeContainer">
+      <p class="snowflake">
+        <span v-html="snow"></span>
+      </p>
     </div>
-    <div class="row">
-      <div class="offset-md-2 col-md-8 col-sm-12 text-center">
-        <img class="img-fluid d-block" src="gifts.png">
+    <div class="container">
+
+      <div class="row">
+        <div class="col-12 text-center">
+          <h1>
+            <strong>{{title}}</strong>
+          </h1>
+        </div>
       </div>
-    </div>
-    <div class="row mt-4">
-      <div class="offset-md-3 col-md-6 col-sm-12 text-center">
-
-         <form class="form-inline justify-content-center" v-on:submit.prevent="getPerson()">
-          <div class="input-group">
-
-            <input type="text" class="form-control" v-model="inputName" placeholder="Code membre BRS">
-            <span class="input-group-btn">
-              <button class="btn btn-danger">Rechercher</button>
-            </span>
-          </div>
-        </form>
+      <div class="row">
+        <div class="offset-md-2 col-md-8 col-sm-12 text-center">
+          <img class="img-fluid d-block" src="gifts.png">
+        </div>
       </div>
-    </div>
+      <div class="row mt-4">
+        <div class="offset-md-3 col-md-6 col-sm-12 text-center">
 
-    <div class="row mt-4">
-      <div class="offset-3 col-6 text-center">
-        <p v-if="result">Fais un cadeau à : {{result}} !</p>
-        <p v-else-if="error">Oups... mauvais code</p>
+          <form class="form-inline justify-content-center" v-on:submit.prevent="getPerson()">
+            <div class="input-group">
+
+              <input type="text" class="form-control" v-model="inputName" placeholder="Code membre BRS">
+              <span class="input-group-btn">
+                <button class="btn btn-danger">Rechercher</button>
+              </span>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="row mt-4">
+        <div class="offset-3 col-6 text-center">
+          <p v-if="result">Fais un cadeau &agrave; : {{result}} !</p>
+          <p v-else-if="error">Oups... mauvais code</p>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<script src="lib/fallingsnow_v6.js"></script>
-<script src="lib/prefixfree.min.js"></script>
+  <script src="lib/fallingsnow_v6.js"></script>
+  <script src="lib/prefixfree.min.js"></script>
 </body>
- 
+
 </html>
 
 <script type="text/javascript">
-const urlParams = new URLSearchParams(window.location.search);
-const event = urlParams.get('event');
+  const urlParams = new URLSearchParams(window.location.search);
+  const eventName = urlParams.get('event');
 
-var script = document.createElement('script');
-script.onload = function(){
-  var app = new Vue({
-    el: '#app',
-    data: {
-      inputName: "",
-      result: null,
-      error: null
-    },
-    methods : {
-      getPerson : function () {
-        result = atob(this.inputName);
-        
-        if (names.includes(result)){
-          this.result = result;  
-          this.error = false;
-        } else {
-          this.error = true;
+  if (eventName){
+    loadScript(eventName, createApp, loadExample);
+  } else {
+    loadExample();
+  }
+
+  function loadExample() {
+    loadScript("example", createApp);
+  } 
+
+  function loadScript(confName, onload, onerror){
+    var script = document.createElement('script');
+    script.onload = onload;
+    script.onerror = onerror;
+
+    script.src = "conf/" + confName + ".js";
+    document.head.appendChild(script);
+  }
+
+  function createApp() {
+    var app = new Vue({
+      el: '#app',
+      data: {
+        snow: snowflakeChar,
+        inputName: "",
+        result: null,
+        error: null
+      },
+      methods: {
+        getPerson: function () {
+          result = atob(this.inputName);
+
+          if (names.includes(result)) {
+            this.result = result;
+            this.error = false;
+          } else {
+            this.error = true;
+          }
+          console.log(result);
         }
-        console.log(result);
       }
-    }
-  });
-}
-script.src = "conf/" + event + ".js";
-
-document.head.appendChild(script);
+    });
+    document.querySelector(".snowflake").style.setProperty("color", snowflakeColor);
+  }
 
 </script>

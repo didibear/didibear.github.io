@@ -1,27 +1,37 @@
-
-function generate(names, secret, notGood) {
-  names = shuffle(names, hashCode(secret));
+/**
+ * Return the associated 
+ * @returns {Array<Array<string>>} list 
+ * @param {Array<string>} names - array of names
+ * @param {string} secret - used as random seed
+ */
+function generate(names, secret) {
+  let shuffledNames = shuffle(names.slice(), hashCode(secret));
 
   // create a chain of names, the next one is the designed name of the current
-  let chain = names.slice();
+  let chain = shuffledNames.slice();
   
-  do {
-    // move the first to last
-    chain.unshift(chain.pop());
-  } while(notGood && notGood(chain));
+  // move the first to last
+  chain.unshift(chain.pop());
  
-  let maxNameLength = names.map(s => s.length).reduce(Math.max);
+  let maxNameLength = shuffledNames.map(s => s.length).reduce(Math.max);
   chain = chain.map(s => s.padEnd(maxNameLength)).map(e => btoa(e));
 
-  return names.map((e, i) => [e, chain[i]]);
+  return shuffledNames.map((e, i) => [e, chain[i]]);
 }
 
 ///////////////
 // Random 
 
+/**
+ * @param {Array} array 
+ * @param {number} seed - the random seed
+ */
 function shuffle(array, seed) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(random(seed) * (i + 1));
+  resetRandom();
+  for (let x = 0; x < array.length * 2; x++) {
+    let i = Math.floor(random(seed) * array.length);
+    let j = Math.floor(random(seed) * array.length);
+
     [array[i], array[j]] = [array[j], array[i]];
   }
   return array;
