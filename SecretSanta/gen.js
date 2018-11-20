@@ -16,7 +16,7 @@ function generate(names, secret) {
   let maxNameLength = shuffledNames.map(s => s.length).reduce(n => Math.max(n));
   chain = chain.map(s => s.padEnd(maxNameLength)).map(e => btoa(e));
 
-  return shuffledNames.map((e, i) => [e, chain[i]]);
+  return shuffle(shuffledNames.map((e, i) => [e, chain[i]]), hashCode(secret));
 }
 
 ///////////////
