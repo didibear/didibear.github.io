@@ -119,7 +119,7 @@
       },
       methods: {
         getPerson: function () {
-          result = atob(this.inputName);
+          result = atob(this.inputName).trim();
 
           if (names.includes(result)) {
             this.result = result;
