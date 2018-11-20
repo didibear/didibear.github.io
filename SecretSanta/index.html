@@ -3,26 +3,37 @@
 
 <head>
   <title>Secret Santa</title>
+  <meta http-equiv="Content-Language" content="fr" /> 
+  
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  
   <link rel="stylesheet" href="style.css">
-
+  
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
   <script src="https://fr.vuejs.org/js/vue.min.js"></script>
+  <script type="text/javascript" src="https://cdn.emailjs.com/sdk/2.2.4/email.min.js"></script>
 
   <script src="gen.js"></script>
 </head>
 
+<style> 
+  [v-cloak], .loading { display:none }
+  [v-cloak].loading { display:block }
+</style>
 <body>
   <div class="content">
     <div id="snowflakeContainer">
       <p class="snowflake">*</p>
     </div>
+    
     <div id="app">
-      <div class="container">
-
+      <div class="loading text-center" v-cloak>
+        <i class="fa fa-spinner fa-pulse fa-3x fa-fw" title="Loading..."></i>
+      </div>
+      <div class="container" v-cloak>
         <div class="row">
           <div class="col-12 text-center">
             <h1>
@@ -73,19 +84,53 @@
                 </tr>
               </tbody>
             </table>
+
+            <button v-if="!mailSent && !mailSentError" class="btn btn-primary" data-toggle="modal" data-target="#confirmModal">Envoyer par mail !</button>
+            <div v-if="mailSent" class="alert alert-success alert-dismissible fade show" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="alert-heading">Mails envoyés!</h4>
+              <p>{{mailSent}}</p>
+            </div>
+            <div v-if="mailSentError" class="alert alert-danger alert-dismissible fade show" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="alert-heading">Echec de l'envoi de mail!</h4>
+              <p>{{mailSentError}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal confirm -->
+      <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Confirmation</h5>
+              <button type="button" class="close" data-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              Confirmer l'envoi des mails ? 
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="sendMails()">Envoyer</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-
   </div>
   <script src="lib/fallingsnow_v6.js"></script>
   <script src="lib/prefixfree.min.js"></script>
 </body>
-
 </html>
 
 <script type="text/javascript">
+  
+  emailjs.init("user_GPoqQnVJd4ewkJmP7WQCj");
+
   const urlParams = new URLSearchParams(window.location.search);
   const eventName = urlParams.get('event');
 
@@ -115,7 +160,9 @@
         generatedCouples: urlParams.get('generate') != null ? generate(names, secret) : null,
         inputName: "",
         result: null,
-        error: null
+        error: null, 
+        mailSent: null,
+        mailSentError: null
       },
       methods: {
         getPerson: function () {
@@ -127,7 +174,23 @@
           } else {
             this.error = true;
           }
-          console.log(result);
+        }, 
+        sendMails : function() {
+          emailjs.send("didibear", "template_Yk1v83Mn", {
+            mail : "adrien.turiot@gmail.com",
+            name: "Adrien",
+            code: "code_value",
+            event: "example"
+          }).then(
+            function(response) {
+              console.log('SUCCESS!', response.status, response.text);
+              this.mailSent = response;
+            }, 
+            function(error) { 
+              console.log('FAILED...', error);
+              this.mailSentError = error;
+            }
+          );
         }
       }
     });

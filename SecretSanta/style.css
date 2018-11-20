@@ -3,7 +3,7 @@ body {
     padding: 30px;
     margin: 0px;
     font-family: Arial, Helvetica, sans-serif;
-    color: #FFF;
+    color: white;
 }
 #snowflakeContainer {
     position: absolute;
@@ -31,13 +31,17 @@ h1 {
     color: #FFF;
     margin: 0px;
 }
-p, ol {
+p.snowflake, ol.snowflake {
     font-size: 24px;
     color: #CCC;
 }
 li {
     margin-bottom: 24px;
     padding-left: 10px;
+}
+
+.modal {
+    color: black;
 }
 /*
 img {
