@@ -13,7 +13,7 @@ function generate(names, secret) {
   // move the first to last
   chain.unshift(chain.pop());
  
-  let maxNameLength = shuffledNames.map(s => s.length).reduce(Math.max);
+  let maxNameLength = shuffledNames.map(s => s.length).reduce(n => Math.max(n));
   chain = chain.map(s => s.padEnd(maxNameLength)).map(e => btoa(e));
 
   return shuffledNames.map((e, i) => [e, chain[i]]);
