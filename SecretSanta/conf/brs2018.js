@@ -1,5 +1,5 @@
-var names = ["Nikko", "Elodie", "Hugo", "Kevin", "Pierre", "Clemence", "Quentin", "Camille", "Joffrey", "Leonie", "Lucas", "Didi", "Mathieu", "Diane", "Manon"];
+var names = ["Nikko", "Hugo", "Kevin", "Pierre", "Clemence", "Quentin", "Camille", "Timothée", "Lucas", "Didi", "Mathieu", "Diane", "Manon"];
 var title = "Nowel de la BRS";
-var secret = "youpi";
+var secret = "carlos";
 
 
